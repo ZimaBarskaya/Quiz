@@ -26,6 +26,7 @@ class CreateTasksTable extends Migration
      */
     public function down()
     {
+        echo "string";
         Schema::drop('tasks');
     }
 }
