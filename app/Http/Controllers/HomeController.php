@@ -130,7 +130,6 @@ class HomeController extends Controller
         $score = 0; //Баллы
         foreach ($request->answer as $answer) {
           $answer = explode(" ", $answer);//Разбиваем на 2 части: 1-id вопроса; 2-id ответа
-
           $currentScore = Answers::find($answer[1]);
           if(isset($request->score)) {
             $score += $currentScore->points;
@@ -144,9 +143,10 @@ class HomeController extends Controller
           $textAnswers = Answers::where('parent_id', $answer[0])->get();
           foreach ($textAnswers as $answer) {
             if(strnatcasecmp(strip_tags($request->text_answer), $answer->name) == 0) {
-              $score =  $answer->points+$request->score;
+              $score +=  $answer->points;
             }
           }
+          $score += $request->score;
         } else { //Если это выборочный вопрос
           $score = Answers::find($answer[1]);
           if(isset($request->score)) {
@@ -223,13 +223,16 @@ class HomeController extends Controller
         $d = "false";
         $quizes = Scores::where(['quiz_id' => $score->quiz_id])->get();
         $quiz = Task::where(['id' => $score->quiz_id])->first();
+
         if (count($arr) > 0) {
           foreach ($arr as $currentQuiz) {
-            if($currentQuiz["quiz_id"] == $quiz->id) {
-              $d = "true";
+            if(isset($quiz->id)) {
+              if($currentQuiz["quiz_id"] == $quiz->id) {
+                $d = "true";
+              }
             }
           }
-          if ($d != "true") {
+          if ($d != "true" && isset($quiz->id)) {
             $arr[$i] = array("quiz_id" => $quiz->id, "name" => $quiz->name, "quiz_count" => count($quizes));
             $i++;
           }
@@ -241,7 +244,6 @@ class HomeController extends Controller
       return view('scores', [
           'quizes' => $arr
       ]);
-
     }
 
     public function users()
