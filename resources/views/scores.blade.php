@@ -3,10 +3,6 @@
 @section('content')
 <div class="container">
     <div class="col-sm-offset-2 col-sm-8">
-      <div class="custom-control custom-checkbox">
-                   <input type="checkbox" class="custom-control-input" id="customCheck1" checked="">
-                   <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
-                 </div>
                  <div class="panel-body">
 
                      <div class="box-body no-padding">
